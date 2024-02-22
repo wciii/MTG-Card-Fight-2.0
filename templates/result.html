@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fight Result</title>
+    <style>
+        /* Add CSS rules to resize the images */
+        .card-image {
+            max-width: 250px; /* Adjust the width as needed */
+            max-height: 350px; /* Adjust the height as needed */
+            height: auto;
+            width: auto;
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        .faded {
+            animation: fadeOut 2s ease forwards;
+            animation-delay: 2s; /* Delay the start of the fade out */
+        }
+    </style>
+</head>
+<body>
+    <audio id="wilhelm-scream" src="{{ url_for('static', filename='wilhelm_scream.mp3') }}" preload="auto"></audio>
+    <script>
+        window.onload = function() {
+            var scream = document.getElementById('wilhelm-scream');
+            var creature1Status = "{{ creature1_status }}";
+            var creature2Status = "{{ creature2_status }}";
+
+            if (creature1Status === 'dead' || creature2Status === 'dead') {
+                // Delay the audio to match the fade out animation
+                setTimeout(function() {
+                    scream.play().catch(function(error) {
+                        console.log("Audio play failed:", error);
+                    });
+                }, 2000); // 2000 milliseconds = 2 seconds
+            }
+        };
+    </script>
+    <h1>Fight Result</h1>
+    <img src="{{ creature1_image_url }}" alt="Creature 1 Image" class="card-image {{ 'faded' if creature1_status == 'dead' else '' }}">
+    <img src="{{ creature2_image_url }}" alt="Creature 2 Image" class="card-image {{ 'faded' if creature2_status == 'dead' else '' }}">
+    <p>{{ result }}</p>
+    <a href="/">Back</a>
+</body>
+</html>
